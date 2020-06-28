@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wj.blog.dao.ConfigMapper">
+  <resultMap id="BaseResultMap" type="com.wj.blog.common.domain.Config">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="browse_count" jdbcType="BIGINT" property="browseCount" />
+    <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, browse_count, last_update_time
+  </sql>
+
+
+  <!-- 更新最后更新时间 -->
+  <update id="updateLastUpdateTime" parameterType="java.util.Date" >
+    update config set last_update_time = #{lastUpdateTime} where id= '1';
+  </update>
+
+  <!-- 更新浏览人数 -->
+  <update id="updateBrowseCount" parameterType="java.lang.Long" >
+    update config set browse_count = #{browseCount} where id='1';
+  </update>
+  <!-- 查询浏览人数 -->
+  <select id="selectFirst" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from config limit 1
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from config
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from config
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wj.blog.common.domain.Config">
+    insert into config (id, browse_count)
+    values (#{id,jdbcType=VARCHAR}, #{browseCount,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wj.blog.common.domain.Config">
+    insert into config
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="browseCount != null">
+        browse_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="browseCount != null">
+        #{browseCount,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wj.blog.common.domain.Config">
+    update config
+    <set>
+      <if test="browseCount != null">
+        browse_count = #{browseCount,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wj.blog.common.domain.Config">
+    update config
+    set browse_count = #{browseCount,jdbcType=BIGINT}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

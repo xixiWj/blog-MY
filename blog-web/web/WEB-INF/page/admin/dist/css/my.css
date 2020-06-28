@@ -1,0 +1,9 @@
+/*table,td,th{*/
+    /*border: 1px solid #888;*/
+    /*border-collapse: collapse;*/
+
+/*}*/
+.div-thumbnail {
+    transition: all .5s ease-in-out;
+    padding: 10px;
+}

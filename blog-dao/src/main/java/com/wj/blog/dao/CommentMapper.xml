@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wj.blog.dao.CommentMapper">
+  <resultMap id="BaseResultMap" type="com.wj.blog.common.domain.Comment">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="father_id" jdbcType="VARCHAR" property="fatherId" />
+    <result column="blog_id" jdbcType="VARCHAR" property="blogId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <result column="have_reply" jdbcType="BIT" property="haveReply" />
+    <result column="system_version" jdbcType="VARCHAR" property="systemVersion" />
+    <result column="browser_info" jdbcType="VARCHAR" property="browserInfo" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.wj.blog.common.domain.Comment">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <!-- 多对一 映射 -->
+  <resultMap type="com.wj.blog.common.domain.Comment" id="getCommentMap">
+    <id column="id" property="id"></id>
+    <result column="father_id" jdbcType="VARCHAR" property="fatherId" />
+    <result column="blog_id" property="blogId"/>
+    <result column="date" property="date"/>
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="have_reply" property="haveReply"/>
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="system_version" jdbcType="VARCHAR" property="systemVersion" />
+    <result column="browser_info" jdbcType="VARCHAR" property="browserInfo" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="v_id" jdbcType="VARCHAR" property="vId" />
+    <association property="user" javaType="com.wj.blog.common.domain.User">
+      <id column="user_id" property="userId"></id>
+      <result column="user_name" property="userName"/>
+      <result column="user_email" property="userEmail"/>
+    </association>
+    <association property="visitor" javaType="com.wj.blog.common.domain.Visitor">
+      <id column="v_id" jdbcType="VARCHAR" property="vId" />
+      <result column="v_name" jdbcType="VARCHAR" property="vName" />
+      <result column="v_email" jdbcType="VARCHAR" property="vEmail" />
+      <result column="v_web_address" jdbcType="VARCHAR" property="vWebAddress" />
+    </association>
+    <association property="blog" javaType="com.wj.blog.common.domain.Blog">
+      <id column="blog_id" jdbcType="VARCHAR" property="blogId" />
+      <result column="blog_title" jdbcType="VARCHAR" property="blogTitle" />
+    </association>
+    <!--<collection property="sons" ofType="com.wj.blog.common.domain.Comment" resultMap="getCommentMap">-->
+    <!--</collection>-->
+  </resultMap>
+
+  <!-- 多对一 映射 -->
+  <resultMap type="com.wj.blog.common.domain.Comment" id="getCommentMap2">
+    <id column="id" property="id"></id>
+    <result column="father_id" jdbcType="VARCHAR" property="fatherId" />
+    <result column="blog_id" property="blogId"/>
+    <result column="date" property="date"/>
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="have_reply" property="haveReply"/>
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="system_version" jdbcType="VARCHAR" property="systemVersion" />
+    <result column="browser_info" jdbcType="VARCHAR" property="browserInfo" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="v_id" jdbcType="VARCHAR" property="vId" />
+    <association property="user" javaType="com.wj.blog.common.domain.User">
+      <id column="user_id" property="userId"></id>
+      <result column="user_name" property="userName"/>
+      <result column="user_email" property="userEmail"/>
+    </association>
+    <association property="visitor" javaType="com.wj.blog.common.domain.Visitor">
+      <id column="v_id" jdbcType="VARCHAR" property="vId" />
+      <result column="v_name" jdbcType="VARCHAR" property="vName" />
+      <result column="v_email" jdbcType="VARCHAR" property="vEmail" />
+      <result column="v_web_address" jdbcType="VARCHAR" property="vWebAddress" />
+    </association>
+    <association property="blog" javaType="com.wj.blog.common.domain.Blog">
+      <id column="blog_id" jdbcType="VARCHAR" property="blogId" />
+      <result column="blog_title" jdbcType="VARCHAR" property="blogTitle" />
+    </association>
+    <!--<collection property="sons" ofType="com.wj.blog.common.domain.Comment" resultMap="getCommentMap">-->
+    <!--</collection>-->
+  </resultMap>
+
+
+
+  <sql id="Base_Column_List">
+    id, father_id, blog_id, user_id, date, have_reply,system_version,browser_info,address,v_id
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+
+  <!-- 查询该用户评论总数 -->
+  <select id="selectTotalByUserId" parameterType="java.lang.String"   resultType="java.lang.Integer">
+     select
+      count(*)
+      from comment c1,visitor v,blog b
+       where
+      c1.v_id = v.v_id and c1.blog_id = b.blog_id  and c1.v_id = #{userId}
+  </select>
+  <!-- 查询该用户最新评论 -->
+  <select id="selectByDateAndUserId"   resultMap="getCommentMap2">
+     select
+      *
+      from comment c1,visitor v,blog b
+       where
+      c1.v_id = v.v_id and c1.blog_id = b.blog_id  and c1.v_id = #{userId}
+      order by c1.date desc
+       LIMIT #{start},#{ps}
+  </select>
+  <!-- 查询最新评论 -->
+  <select id="selectByDate"   resultMap="getCommentMap2">
+     select
+      *
+      from comment c1,visitor v,blog b
+       where
+      c1.v_id = v.v_id and c1.blog_id = b.blog_id
+      order by c1.date desc
+       LIMIT #{start},#{ps}
+  </select>
+
+  <!-- 查询文章评论 -->
+  <select id="selectCommentsByBlogId"  parameterType="java.lang.String" resultMap="getCommentMap">
+     select
+      *
+      from comment c1  ,visitor v
+       where
+      c1.v_id = v.v_id and
+       c1.blog_id = #{blogId,jdbcType=VARCHAR} order by c1.date desc
+  </select>
+
+
+  <!-- 查询评论总数 -->
+  <select id="selectTotal" resultType="java.lang.Integer">
+    select
+     count(*)
+    from comment
+  </select>
+
+
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from comment
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from comment
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wj.blog.common.domain.Comment">
+    insert into comment (id, father_id, blog_id, 
+      user_id, date, have_reply, 
+      content,system_version,browser_info,address,v_id)
+    values (#{id,jdbcType=VARCHAR}, #{fatherId,jdbcType=VARCHAR}, #{blogId,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, #{haveReply,jdbcType=BIT}, 
+      #{content,jdbcType=LONGVARCHAR}, #{systemVersion,jdbcType=VARCHAR},
+      #{browserInfo,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},#{vId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wj.blog.common.domain.Comment">
+    insert into comment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="fatherId != null">
+        father_id,
+      </if>
+      <if test="blogId != null">
+        blog_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="date != null">
+        date,
+      </if>
+      <if test="haveReply != null">
+        have_reply,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="systemVersion != null">
+        system_version,
+      </if>
+      <if test="browserInfo != null">
+        browser_info,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="vId != null">
+        v_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="fatherId != null">
+        #{fatherId,jdbcType=VARCHAR},
+      </if>
+      <if test="blogId != null">
+        #{blogId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="haveReply != null">
+        #{haveReply,jdbcType=BIT},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="systemVersion != null">
+        #{systemVersion,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="browserInfo != null">
+        #{browserInfo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=LONGVARCHAR}
+      </if>
+      <if test="vId != null">
+        #{vId,jdbcType=LONGVARCHAR}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wj.blog.common.domain.Comment">
+    update comment
+    <set>
+      <if test="fatherId != null">
+        father_id = #{fatherId,jdbcType=VARCHAR},
+      </if>
+      <if test="blogId != null">
+        blog_id = #{blogId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        date = #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="haveReply != null">
+        have_reply = #{haveReply,jdbcType=BIT},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="systemVersion != null">
+        system_version = #{systemVersion,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="browserInfo != null">
+        browser_info=#{browserInfo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="address != null">
+      address= #{address,jdbcType=LONGVARCHAR},
+    </if>
+      <if test="vId != null">
+        vId= #{vId,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wj.blog.common.domain.Comment">
+    update comment
+    set father_id = #{fatherId,jdbcType=VARCHAR},
+      blog_id = #{blogId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      date = #{date,jdbcType=TIMESTAMP},
+      have_reply = #{haveReply,jdbcType=BIT},
+      content = #{content,jdbcType=LONGVARCHAR}
+      system_version = #{systemVersion,jdbcType=LONGVARCHAR}
+      browser_info = #{browserInfo,jdbcType=LONGVARCHAR}
+      address = #{address,jdbcType=LONGVARCHAR},
+      v_id=#{vId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wj.blog.common.domain.Comment">
+    update comment
+    set father_id = #{fatherId,jdbcType=VARCHAR},
+      blog_id = #{blogId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      date = #{date,jdbcType=TIMESTAMP},
+      have_reply = #{haveReply,jdbcType=BIT}
+      system_version = #{systemVersion,jdbcType=LONGVARCHAR}
+      browser_info = #{browserInfo,jdbcType=LONGVARCHAR}
+      address = #{address,jdbcType=LONGVARCHAR},
+      v_id=#{vId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

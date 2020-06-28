@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wj.blog.dao.PermissionMapper">
+  <resultMap id="BaseResultMap" type="com.wj.blog.common.domain.Permission">
+    <id column="p_id" jdbcType="INTEGER" property="pId" />
+    <result column="p_name" jdbcType="VARCHAR" property="pName" />
+    <result column="p_Alias" jdbcType="VARCHAR" property="pAlias" />
+    <result column="p_created" jdbcType="BIGINT" property="pCreated" />
+    <result column="p_updated" jdbcType="BIGINT" property="pUpdated" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    p_id, p_name, p_Alias, p_created, p_updated
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from permission
+    where p_id = #{pId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from permission
+    where p_id = #{pId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wj.blog.common.domain.Permission">
+    insert into permission (p_id, p_name, p_Alias, 
+      p_created, p_updated)
+    values (#{pId,jdbcType=INTEGER}, #{pName,jdbcType=VARCHAR}, #{pAlias,jdbcType=VARCHAR}, 
+      #{pCreated,jdbcType=BIGINT}, #{pUpdated,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wj.blog.common.domain.Permission">
+    insert into permission
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pId != null">
+        p_id,
+      </if>
+      <if test="pName != null">
+        p_name,
+      </if>
+      <if test="pAlias != null">
+        p_Alias,
+      </if>
+      <if test="pCreated != null">
+        p_created,
+      </if>
+      <if test="pUpdated != null">
+        p_updated,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pId != null">
+        #{pId,jdbcType=INTEGER},
+      </if>
+      <if test="pName != null">
+        #{pName,jdbcType=VARCHAR},
+      </if>
+      <if test="pAlias != null">
+        #{pAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="pCreated != null">
+        #{pCreated,jdbcType=BIGINT},
+      </if>
+      <if test="pUpdated != null">
+        #{pUpdated,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wj.blog.common.domain.Permission">
+    update permission
+    <set>
+      <if test="pName != null">
+        p_name = #{pName,jdbcType=VARCHAR},
+      </if>
+      <if test="pAlias != null">
+        p_Alias = #{pAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="pCreated != null">
+        p_created = #{pCreated,jdbcType=BIGINT},
+      </if>
+      <if test="pUpdated != null">
+        p_updated = #{pUpdated,jdbcType=BIGINT},
+      </if>
+    </set>
+    where p_id = #{pId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wj.blog.common.domain.Permission">
+    update permission
+    set p_name = #{pName,jdbcType=VARCHAR},
+      p_Alias = #{pAlias,jdbcType=VARCHAR},
+      p_created = #{pCreated,jdbcType=BIGINT},
+      p_updated = #{pUpdated,jdbcType=BIGINT}
+    where p_id = #{pId,jdbcType=INTEGER}
+  </update>
+
+</mapper>

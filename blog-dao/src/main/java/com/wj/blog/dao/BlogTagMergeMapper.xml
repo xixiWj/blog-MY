@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wj.blog.dao.BlogTagMergeMapper">
+  <resultMap id="BaseResultMap" type="com.wj.blog.common.domain.BlogTagMerge">
+    <id column="b_t_id" jdbcType="INTEGER" property="bTId" />
+    <result column="b_id" jdbcType="VARCHAR" property="bId" />
+    <result column="t_id" jdbcType="INTEGER" property="tId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    b_t_id, b_id, t_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from blog_tag_merge
+    where b_t_id = #{bTId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from blog_tag_merge
+    where b_t_id = #{bTId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wj.blog.common.domain.BlogTagMerge">
+    insert into blog_tag_merge (b_t_id, b_id, t_id
+      )
+    values (#{bTId,jdbcType=INTEGER}, #{bId,jdbcType=VARCHAR}, #{tId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wj.blog.common.domain.BlogTagMerge">
+    insert into blog_tag_merge
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bTId != null">
+        b_t_id,
+      </if>
+      <if test="bId != null">
+        b_id,
+      </if>
+      <if test="tId != null">
+        t_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bTId != null">
+        #{bTId,jdbcType=INTEGER},
+      </if>
+      <if test="bId != null">
+        #{bId,jdbcType=VARCHAR},
+      </if>
+      <if test="tId != null">
+        #{tId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wj.blog.common.domain.BlogTagMerge">
+    update blog_tag_merge
+    <set>
+      <if test="bId != null">
+        b_id = #{bId,jdbcType=VARCHAR},
+      </if>
+      <if test="tId != null">
+        t_id = #{tId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where b_t_id = #{bTId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wj.blog.common.domain.BlogTagMerge">
+    update blog_tag_merge
+    set b_id = #{bId,jdbcType=VARCHAR},
+      t_id = #{tId,jdbcType=INTEGER}
+    where b_t_id = #{bTId,jdbcType=INTEGER}
+  </update>
+</mapper>

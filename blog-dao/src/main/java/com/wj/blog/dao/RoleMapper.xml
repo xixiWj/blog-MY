@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wj.blog.dao.RoleMapper">
+  <resultMap id="BaseResultMap" type="com.wj.blog.common.domain.Role">
+    <id column="r_id" jdbcType="INTEGER" property="rId" />
+    <result column="r_name" jdbcType="VARCHAR" property="rName" />
+    <result column="r_alias" jdbcType="VARCHAR" property="rAlias" />
+    <result column="r_created" jdbcType="BIGINT" property="rCreated" />
+    <result column="r_updated" jdbcType="BIGINT" property="rUpdated" />
+    <result column="createdAt" jdbcType="VARCHAR" property="createdat" />
+
+    <collection property="permissions" ofType="com.wj.blog.common.domain.Permission">
+      <id column="p_id" property="pId"/>
+      <result column="p_name" property="pName"/>
+      <result column="p_alias" property="pAlias"/>
+
+    </collection>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    r_id, r_name, r_alias, r_created, r_updated, createdAt
+  </sql>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from role
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from role r,r_p_ref rpr ,permission p
+    where r.r_id = #{rId,jdbcType=INTEGER}
+    and r.r_id = rpr.rp_r_id and p.p_id = rpr.rp_p_id
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from role
+    where r_id = #{rId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wj.blog.common.domain.Role">
+    insert into role (r_id, r_name, r_alias, 
+      r_created, r_updated, createdAt
+      )
+    values (#{rId,jdbcType=INTEGER}, #{rName,jdbcType=VARCHAR}, #{rAlias,jdbcType=VARCHAR}, 
+      #{rCreated,jdbcType=BIGINT}, #{rUpdated,jdbcType=BIGINT}, #{createdat,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wj.blog.common.domain.Role">
+    insert into role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="rId != null">
+        r_id,
+      </if>
+      <if test="rName != null">
+        r_name,
+      </if>
+      <if test="rAlias != null">
+        r_alias,
+      </if>
+      <if test="rCreated != null">
+        r_created,
+      </if>
+      <if test="rUpdated != null">
+        r_updated,
+      </if>
+      <if test="createdat != null">
+        createdAt,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="rId != null">
+        #{rId,jdbcType=INTEGER},
+      </if>
+      <if test="rName != null">
+        #{rName,jdbcType=VARCHAR},
+      </if>
+      <if test="rAlias != null">
+        #{rAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="rCreated != null">
+        #{rCreated,jdbcType=BIGINT},
+      </if>
+      <if test="rUpdated != null">
+        #{rUpdated,jdbcType=BIGINT},
+      </if>
+      <if test="createdat != null">
+        #{createdat,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wj.blog.common.domain.Role">
+    update role
+    <set>
+      <if test="rName != null">
+        r_name = #{rName,jdbcType=VARCHAR},
+      </if>
+      <if test="rAlias != null">
+        r_alias = #{rAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="rCreated != null">
+        r_created = #{rCreated,jdbcType=BIGINT},
+      </if>
+      <if test="rUpdated != null">
+        r_updated = #{rUpdated,jdbcType=BIGINT},
+      </if>
+      <if test="createdat != null">
+        createdAt = #{createdat,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where r_id = #{rId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wj.blog.common.domain.Role">
+    update role
+    set r_name = #{rName,jdbcType=VARCHAR},
+      r_alias = #{rAlias,jdbcType=VARCHAR},
+      r_created = #{rCreated,jdbcType=BIGINT},
+      r_updated = #{rUpdated,jdbcType=BIGINT},
+      createdAt = #{createdat,jdbcType=VARCHAR}
+    where r_id = #{rId,jdbcType=INTEGER}
+  </update>
+</mapper>

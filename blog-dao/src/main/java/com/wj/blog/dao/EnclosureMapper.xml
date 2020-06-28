@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wj.blog.dao.EnclosureMapper">
+  <resultMap id="BaseResultMap" type="com.wj.blog.common.domain.Enclosure">
+    <id column="e_id" jdbcType="INTEGER" property="eId" />
+    <result column="e_Name" jdbcType="VARCHAR" property="eName" />
+    <result column="e_created" jdbcType="BIGINT" property="eCreated" />
+    <result column="e_u_id" jdbcType="VARCHAR" property="eUId" />
+    <result column="e_size" jdbcType="INTEGER" property="eSize" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    e_id, e_Name, e_created, e_u_id, e_size
+  </sql>
+
+
+  <!-- 查看最新上传附件 -->
+  <select id="selectByDate" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from enclosure
+    order by e_created desc
+    limit #{start},#{ps}
+  </select>
+
+
+  <!-- 查看附件总数-->
+  <select id="selectTotal" resultType="java.lang.Integer">
+    select
+      count(*)
+    from enclosure
+  </select>
+
+
+
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from enclosure
+    where e_id = #{eId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from enclosure
+    where e_id = #{eId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wj.blog.common.domain.Enclosure">
+    insert into enclosure (e_id, e_Name, e_created, 
+      e_u_id, e_size)
+    values (#{eId,jdbcType=INTEGER}, #{eName,jdbcType=VARCHAR}, #{eCreated,jdbcType=BIGINT}, 
+      #{eUId,jdbcType=VARCHAR}, #{eSize,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wj.blog.common.domain.Enclosure">
+    insert into enclosure
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="eId != null">
+        e_id,
+      </if>
+      <if test="eName != null">
+        e_Name,
+      </if>
+      <if test="eCreated != null">
+        e_created,
+      </if>
+      <if test="eUId != null">
+        e_u_id,
+      </if>
+      <if test="eSize != null">
+        e_size,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="eId != null">
+        #{eId,jdbcType=INTEGER},
+      </if>
+      <if test="eName != null">
+        #{eName,jdbcType=VARCHAR},
+      </if>
+      <if test="eCreated != null">
+        #{eCreated,jdbcType=BIGINT},
+      </if>
+      <if test="eUId != null">
+        #{eUId,jdbcType=VARCHAR},
+      </if>
+      <if test="eSize != null">
+        #{eSize,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wj.blog.common.domain.Enclosure">
+    update enclosure
+    <set>
+      <if test="eName != null">
+        e_Name = #{eName,jdbcType=VARCHAR},
+      </if>
+      <if test="eCreated != null">
+        e_created = #{eCreated,jdbcType=BIGINT},
+      </if>
+      <if test="eUId != null">
+        e_u_id = #{eUId,jdbcType=VARCHAR},
+      </if>
+      <if test="eSize != null">
+        e_size = #{eSize,jdbcType=INTEGER},
+      </if>
+    </set>
+    where e_id = #{eId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wj.blog.common.domain.Enclosure">
+    update enclosure
+    set e_Name = #{eName,jdbcType=VARCHAR},
+      e_created = #{eCreated,jdbcType=BIGINT},
+      e_u_id = #{eUId,jdbcType=VARCHAR},
+      e_size = #{eSize,jdbcType=INTEGER}
+    where e_id = #{eId,jdbcType=INTEGER}
+  </update>
+
+</mapper>

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wj.blog.dao.UserinfoMapper">
+  <resultMap id="BaseResultMap" type="com.wj.blog.common.domain.Userinfo">
+    <id column="userinfo_id" jdbcType="VARCHAR" property="userinfoId" />
+    <result column="u_user_id" jdbcType="VARCHAR" property="uUserId" />
+    <result column="user_full_name" jdbcType="VARCHAR" property="userFullName" />
+    <result column="user_sex" jdbcType="BIT" property="userSex" />
+    <result column="user_birthday" jdbcType="DATE" property="userBirthday" />
+    <result column="user_job" jdbcType="VARCHAR" property="userJob" />
+    <result column="user_post" jdbcType="VARCHAR" property="userPost" />
+    <result column="user_place" jdbcType="VARCHAR" property="userPlace" />
+    <result column="user_image" jdbcType="VARCHAR" property="userImage" />
+    <result column="user_recent_login_time" jdbcType="TIMESTAMP" property="userRecentLoginTime" />
+    <result column="user_PV" jdbcType="INTEGER" property="userPv" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.wj.blog.common.domain.Userinfo">
+    <result column="user_introduction" jdbcType="LONGVARCHAR" property="userIntroduction" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    userinfo_id, u_user_id, user_full_name, user_sex, user_birthday, user_job, user_post, user_place,
+    user_image, user_recent_login_time, user_PV
+  </sql>
+  <sql id="Blob_Column_List">
+    user_introduction
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from userinfo
+    where userinfo_id = #{userinfoId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from userinfo
+    where userinfo_id = #{userinfoId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wj.blog.common.domain.Userinfo">
+    insert into userinfo (userinfo_id, u_user_id, user_full_name,
+      user_sex, user_birthday, user_job, 
+      user_post, user_place, user_image, 
+      user_recent_login_time, user_PV, user_introduction
+      )
+    values (#{userinfoId,jdbcType=VARCHAR}, #{uUserId,jdbcType=VARCHAR}, #{userFullName,jdbcType=VARCHAR},
+      #{userSex,jdbcType=BIT}, #{userBirthday,jdbcType=DATE}, #{userJob,jdbcType=VARCHAR}, 
+      #{userPost,jdbcType=VARCHAR}, #{userPlace,jdbcType=VARCHAR}, #{userImage,jdbcType=VARCHAR}, 
+      #{userRecentLoginTime,jdbcType=TIMESTAMP}, #{userPv,jdbcType=INTEGER}, #{userIntroduction,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wj.blog.common.domain.Userinfo">
+    insert into userinfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userinfoId != null">
+        userinfo_id,
+      </if>
+      <if test="uUserId != null">
+        u_user_id,
+      </if>
+      <if test="userFullName != null">
+        user_full_name,
+      </if>
+      <if test="userSex != null">
+        user_sex,
+      </if>
+      <if test="userBirthday != null">
+        user_birthday,
+      </if>
+      <if test="userJob != null">
+        user_job,
+      </if>
+      <if test="userPost != null">
+        user_post,
+      </if>
+      <if test="userPlace != null">
+        user_place,
+      </if>
+      <if test="userImage != null">
+        user_image,
+      </if>
+      <if test="userRecentLoginTime != null">
+        user_recent_login_time,
+      </if>
+      <if test="userPv != null">
+        user_PV,
+      </if>
+      <if test="userIntroduction != null">
+        user_introduction,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userinfoId != null">
+        #{userinfoId,jdbcType=VARCHAR},
+      </if>
+      <if test="uUserId != null">
+        #{uUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="userFullName != null">
+        #{userFullName,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null">
+        #{userSex,jdbcType=BIT},
+      </if>
+      <if test="userBirthday != null">
+        #{userBirthday,jdbcType=DATE},
+      </if>
+      <if test="userJob != null">
+        #{userJob,jdbcType=VARCHAR},
+      </if>
+      <if test="userPost != null">
+        #{userPost,jdbcType=VARCHAR},
+      </if>
+      <if test="userPlace != null">
+        #{userPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="userImage != null">
+        #{userImage,jdbcType=VARCHAR},
+      </if>
+      <if test="userRecentLoginTime != null">
+        #{userRecentLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userPv != null">
+        #{userPv,jdbcType=INTEGER},
+      </if>
+      <if test="userIntroduction != null">
+        #{userIntroduction,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wj.blog.common.domain.Userinfo">
+    update userinfo
+    <set>
+      <if test="uUserId != null">
+        u_user_id = #{uUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="userFullName != null">
+        user_full_name = #{userFullName,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null">
+        user_sex = #{userSex,jdbcType=BIT},
+      </if>
+      <if test="userBirthday != null">
+        user_birthday = #{userBirthday,jdbcType=DATE},
+      </if>
+      <if test="userJob != null">
+        user_job = #{userJob,jdbcType=VARCHAR},
+      </if>
+      <if test="userPost != null">
+        user_post = #{userPost,jdbcType=VARCHAR},
+      </if>
+      <if test="userPlace != null">
+        user_place = #{userPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="userImage != null">
+        user_image = #{userImage,jdbcType=VARCHAR},
+      </if>
+      <if test="userRecentLoginTime != null">
+        user_recent_login_time = #{userRecentLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userPv != null">
+        user_PV = #{userPv,jdbcType=INTEGER},
+      </if>
+      <if test="userIntroduction != null">
+        user_introduction = #{userIntroduction,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where userinfo_id = #{userinfoId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wj.blog.common.domain.Userinfo">
+    update userinfo
+    set u_user_id = #{uUserId,jdbcType=VARCHAR},
+      user_full_name = #{userFullName,jdbcType=VARCHAR},
+      user_sex = #{userSex,jdbcType=BIT},
+      user_birthday = #{userBirthday,jdbcType=DATE},
+      user_job = #{userJob,jdbcType=VARCHAR},
+      user_post = #{userPost,jdbcType=VARCHAR},
+      user_place = #{userPlace,jdbcType=VARCHAR},
+      user_image = #{userImage,jdbcType=VARCHAR},
+      user_recent_login_time = #{userRecentLoginTime,jdbcType=TIMESTAMP},
+      user_PV = #{userPv,jdbcType=INTEGER},
+      user_introduction = #{userIntroduction,jdbcType=LONGVARCHAR}
+    where userinfo_id = #{userinfoId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wj.blog.common.domain.Userinfo">
+    update userinfo
+    set u_user_id = #{uUserId,jdbcType=VARCHAR},
+      user_full_name = #{userFullName,jdbcType=VARCHAR},
+      user_sex = #{userSex,jdbcType=BIT},
+      user_birthday = #{userBirthday,jdbcType=DATE},
+      user_job = #{userJob,jdbcType=VARCHAR},
+      user_post = #{userPost,jdbcType=VARCHAR},
+      user_place = #{userPlace,jdbcType=VARCHAR},
+      user_image = #{userImage,jdbcType=VARCHAR},
+      user_recent_login_time = #{userRecentLoginTime,jdbcType=TIMESTAMP},
+      user_PV = #{userPv,jdbcType=INTEGER}
+    where userinfo_id = #{userinfoId,jdbcType=VARCHAR}
+  </update>
+</mapper>

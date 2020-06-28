@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wj.blog.dao.VisitorMapper">
+  <resultMap id="BaseResultMap" type="com.wj.blog.common.domain.Visitor">
+    <id column="v_id" jdbcType="VARCHAR" property="vId" />
+    <result column="v_name" jdbcType="VARCHAR" property="vName" />
+    <result column="v_email" jdbcType="VARCHAR" property="vEmail" />
+    <result column="v_web_address" jdbcType="VARCHAR" property="vWebAddress" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    v_id, v_name, v_email, v_web_address
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from visitor
+    where v_id = #{vId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from visitor
+    where v_id = #{vId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wj.blog.common.domain.Visitor">
+    insert into visitor (v_id, v_name, v_email, 
+      v_web_address)
+    values (#{vId,jdbcType=VARCHAR}, #{vName,jdbcType=VARCHAR}, #{vEmail,jdbcType=VARCHAR}, 
+      #{vWebAddress,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wj.blog.common.domain.Visitor">
+    insert into visitor
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="vId != null">
+        v_id,
+      </if>
+      <if test="vName != null">
+        v_name,
+      </if>
+      <if test="vEmail != null">
+        v_email,
+      </if>
+      <if test="vWebAddress != null">
+        v_web_address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="vId != null">
+        #{vId,jdbcType=VARCHAR},
+      </if>
+      <if test="vName != null">
+        #{vName,jdbcType=VARCHAR},
+      </if>
+      <if test="vEmail != null">
+        #{vEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="vWebAddress != null">
+        #{vWebAddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wj.blog.common.domain.Visitor">
+    update visitor
+    <set>
+      <if test="vName != null">
+        v_name = #{vName,jdbcType=VARCHAR},
+      </if>
+      <if test="vEmail != null">
+        v_email = #{vEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="vWebAddress != null">
+        v_web_address = #{vWebAddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where v_id = #{vId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wj.blog.common.domain.Visitor">
+    update visitor
+    set v_name = #{vName,jdbcType=VARCHAR},
+      v_email = #{vEmail,jdbcType=VARCHAR},
+      v_web_address = #{vWebAddress,jdbcType=VARCHAR}
+    where v_id = #{vId,jdbcType=VARCHAR}
+  </update>
+</mapper>

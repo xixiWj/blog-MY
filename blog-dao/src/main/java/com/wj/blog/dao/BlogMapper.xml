@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wj.blog.dao.BlogMapper">
+  <resultMap id="BaseResultMap" type="com.wj.blog.common.domain.Blog">
+    <id column="blog_id" jdbcType="VARCHAR" property="blogId" />
+    <result column="blog_title" jdbcType="VARCHAR" property="blogTitle" />
+    <result column="blog_visit" jdbcType="INTEGER" property="blogVisit" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="blog_date" jdbcType="TIMESTAMP" property="blogDate" />
+    <result column="blog_cate" jdbcType="VARCHAR" property="blogCate" />
+    <result column="blog_update" jdbcType="TIMESTAMP" property="blogUpdate" />
+    <result column="blog_info" jdbcType="VARCHAR" property="blogInfo" />
+    <result column="blog_like_count" jdbcType="INTEGER" property="blogLikeCount" />
+    <result column="blog_comment_count" jdbcType="INTEGER" property="blogCommentCount" />
+    <result column="blog_status" jdbcType="INTEGER" property="blogStatus" />
+    <result column="blog_order" jdbcType="INTEGER" property="blogOrder" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.wj.blog.common.domain.Blog">
+    <result column="blog_text" jdbcType="LONGVARCHAR" property="blogText" />
+  </resultMap>
+
+  <resultMap id="oneToOne" extends="ResultMapWithBLOBs" type="com.wj.blog.common.domain.Blog">
+    <association property="category" javaType="com.wj.blog.common.domain.Category">
+      <id column="category_id" jdbcType="VARCHAR" property="categoryId" />
+      <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+      <result column="category_description" jdbcType="VARCHAR" property="categoryDescription" />
+    </association>
+      <association property="user" javaType="com.wj.blog.common.domain.User">
+          <id column="u_user_id" jdbcType="VARCHAR" property="userId" />
+          <result column="user_name" jdbcType="VARCHAR" property="userName" />
+          <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
+      </association>
+  </resultMap>
+
+  <!-- 博客字段-->
+  <sql id="Base_Column_List">
+    blog_id, blog_title, blog_visit, b.user_id, blog_date, blog_cate, blog_update, blog_info,blog_like_count,blog_comment_count,blog_status,blog_order
+  </sql>
+
+  <!-- 博客内容字段-->
+  <sql id="Blob_Column_List">
+    blog_text
+  </sql>
+
+    <!-- 分类字段 -->
+    <sql id="Category_Column_List">
+    category_id, category_name, category_description
+  </sql>
+    <!-- 作者字段 -->
+    <sql id="User_Column_List">
+    u1.user_id u_user_id, user_name, user_password, user_email
+    </sql>
+
+  <!-- 评论人数前五 -->
+  <select id="selectByComments" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from blog b where blog_status = 1 order by blog_comment_count desc limit 0,5
+  </select>
+
+
+
+    <!-- 搜索文章总数  -->
+    <select id="searchBlogTr" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select
+         count(*)
+        from blog b
+        where b.blog_title like "%"#{info}"%" or b.blog_info like "%"#{info}"%"
+    </select>
+
+  <!-- 搜索文章  -->
+  <select id="searchBlog" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from blog b where b.blog_title like "%"#{info}"%" or b.blog_info like "%"#{info}"%"
+      limit #{start},#{ps}
+  </select>
+
+  <!-- 查询浏览人数前五 -->
+  <select id="findFiveByVisit" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from blog b where  blog_status = 1 order by blog_visit desc limit 0,5
+  </select>
+
+  <!-- 查询文章的上一条文章 -->
+  <select id="selectPreBlogByBlogId"  parameterType="java.lang.String"  resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />,
+     <include refid="Category_Column_List"/>,
+      <include refid="User_Column_List"/>
+    from blog b,category c1,user u1
+    where blog_id = (select blog_id from blog where blog_cate =
+      (select blog_cate from blog where blog_id = #{blogId,jdbcType=VARCHAR}) and
+      blog_date &lt; (
+      select blog_date from blog where blog_id = #{blogId,jdbcType=VARCHAR}
+    ) order by blog_date desc limit 1) and b.blog_cate=c1.category_id and b.user_id = u1.user_id and b.blog_status = 1;
+  </select>
+
+  <!-- 查询文章的下一条文章 -->
+  <select id="selectNextBlogByBlogId"  parameterType="java.lang.String"  resultMap="oneToOne">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />,
+    <include refid="Category_Column_List"/>,
+      <include refid="User_Column_List"/>
+    from  blog b,category c1,user u1
+    where blog_id = (select blog_id from blog where blog_cate =
+      (select blog_cate from blog where blog_id = #{blogId,jdbcType=VARCHAR}) and
+      blog_date &gt; (
+    select blog_date from blog where blog_id = #{blogId,jdbcType=VARCHAR}
+    )  order by blog_date asc limit 1)and b.blog_cate=c1.category_id and b.user_id = u1.user_id and b.blog_status = 1;
+  </select>
+
+  <!-- 通过条件查询博客总数 -->
+  <select id="selectTotalBlog"  parameterType="com.wj.blog.common.domain.BlogCriteria" resultType="java.lang.Integer">
+    select count(*)
+    from blog b,category c1
+    where  b.blog_cate=c1.category_id  and b.blog_status = 1
+    <trim prefix="and" suffix="" suffixOverrides="AND | OR">
+        <if test="userId != null">
+            user_id=#{userId,jdbcType=VARCHAR} and
+        </if>
+        <if test="categoryId != null">
+          blog_cate=#{categoryId,jdbcType=VARCHAR} and
+        </if>
+    </trim>
+  </select>
+  <!-- 查询博客总数 条件 : 分类-->
+ <!-- <select id="selectTotalBlogByCategoryId"  parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(*)
+    from blog where category_id = #{categoryId}
+  </select>-->
+
+  <!-- 条件查询博客并按照浏览人数排序 分页查询 -->
+  <select id="selectByDate"  parameterType="com.wj.blog.common.domain.BlogCriteria"  resultMap="oneToOne">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />,
+      <include refid="Category_Column_List"/>
+    from blog b,category c1
+    where  b.blog_cate=c1.category_id  and b.blog_status = 1
+    <trim prefix="and" suffix="" suffixOverrides="AND | OR">
+      <if test="blogCriteria.userId != null">
+      user_id=#{blogCriteria.userId,jdbcType=VARCHAR} and
+    </if>
+      <if test="blogCriteria.categoryId != null">
+        blog_cate=#{blogCriteria.categoryId,jdbcType=VARCHAR} and
+      </if>
+    </trim>
+    ORDER BY blog_date DESC LIMIT #{start},#{ps}
+  </select>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="oneToOne">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />,
+      <include refid="Category_Column_List"/>,
+      <include refid="User_Column_List"/>
+    from blog b,category c1,user u1
+    where blog_id = #{blogId,jdbcType=VARCHAR} and b.blog_cate=c1.category_id and b.user_id = u1.user_id and b.blog_status = 1
+  </select>
+
+  <select id="findMessage" parameterType="java.lang.String" resultMap="oneToOne">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />,
+    <include refid="User_Column_List"/>
+    from blog b,user u1
+    where blog_id = #{blogId,jdbcType=VARCHAR}  and b.user_id = u1.user_id and b.blog_status = 0
+  </select>
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from blog
+    where  blog_id = #{blogId,jdbcType=VARCHAR} and   b1.blog_cate=c1.category_id
+  </delete>
+  <insert id="insert" parameterType="com.wj.blog.common.domain.Blog">
+    insert into blog (blog_id, blog_title, blog_visit, 
+      user_id, blog_date, blog_cate, 
+      blog_update, blog_info, blog_text,blog_like_count,blog_comment_count,blog_status,blog_order
+      )
+    values (#{blogId,jdbcType=VARCHAR}, #{blogTitle,jdbcType=VARCHAR}, #{blogVisit,jdbcType=INTEGER},
+      #{userId,jdbcType=VARCHAR}, #{blogDate,jdbcType=TIMESTAMP}, #{blogCate,jdbcType=VARCHAR}, 
+      #{blogUpdate,jdbcType=TIMESTAMP}, #{blogInfo,jdbcType=VARCHAR}, #{blogText,jdbcType=LONGVARCHAR},
+      #{blogLikeCount,jdbcType=INTEGER},#{blogCommentCount,jdbcType=INTEGER},#{blogStatus,jdbcType=INTEGER},
+      #{blogOrder,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wj.blog.common.domain.Blog">
+    insert into blog
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="blogId != null">
+        blog_id,
+      </if>
+      <if test="blogTitle != null">
+        blog_title,
+      </if>
+      <if test="blogVisit != null">
+        blog_visit,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="blogDate != null">
+        blog_date,
+      </if>
+      <if test="blogCate != null">
+        blog_cate,
+      </if>
+      <if test="blogUpdate != null">
+        blog_update,
+      </if>
+      <if test="blogInfo != null">
+        blog_info,
+      </if>
+      <if test="blogText != null">
+        blog_text,
+      </if>
+      <if test="blogText != null">
+        blog_like_count,
+      </if>
+      <if test="blogText != null">
+        blog_like_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="blogId != null">
+        #{blogId,jdbcType=VARCHAR},
+      </if>
+      <if test="blogTitle != null">
+        #{blogTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="blogVisit != null">
+        #{blogVisit,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="blogDate != null">
+        #{blogDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="blogCate != null">
+        #{blogCate,jdbcType=VARCHAR},
+      </if>
+      <if test="blogUpdate != null">
+        #{blogUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="blogInfo != null">
+        #{blogInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="blogText != null">
+        #{blogText,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="blogLikeCount != null">
+      #{blogLikeCount,jdbcType=INTEGER},
+    </if>
+      <if test="blogCommentCount != null">
+        #{blogCommentCount,jdbcType=INTEGER},
+      </if>
+      <if test="blogStatus != null">
+        #{blogStatus,jdbcType=INTEGER},
+      </if>
+      <if test="blogOrder != null">
+        #{blogOrder,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wj.blog.common.domain.Blog">
+    update blog
+    <set>
+      <if test="blogTitle != null">
+        blog_title = #{blogTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="blogVisit != null">
+        blog_visit = #{blogVisit,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="blogDate != null">
+        blog_date = #{blogDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="blogCate != null">
+        blog_cate = #{blogCate,jdbcType=VARCHAR},
+      </if>
+      <if test="blogUpdate != null">
+        blog_update = #{blogUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="blogInfo != null">
+        blog_info = #{blogInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="blogText != null">
+        blog_text = #{blogText,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="blogLikeCount != null">
+        blog_like_count = #{blogLikeCount,jdbcType=INTEGER},
+      </if>
+      <if test="blogCommentCount != null">
+        blog_comment_count = #{blogCommentCount,jdbcType=INTEGER},
+      </if>
+      <if test="blogStatus != null">
+        blog_status = #{blogStatus,jdbcType=INTEGER},
+      </if>
+      <if test="blogOrder != null">
+        blog_order = #{blogOrder,jdbcType=INTEGER},
+      </if>
+    </set>
+    where blog_id = #{blogId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wj.blog.common.domain.Blog">
+    update blog
+    set blog_title = #{blogTitle,jdbcType=VARCHAR},
+      blog_visit = #{blogVisit,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=VARCHAR},
+      blog_date = #{blogDate,jdbcType=TIMESTAMP},
+      blog_cate = #{blogCate,jdbcType=VARCHAR},
+      blog_update = #{blogUpdate,jdbcType=TIMESTAMP},
+      blog_info = #{blogInfo,jdbcType=VARCHAR},
+      blog_text = #{blogText,jdbcType=LONGVARCHAR},
+      blog_like_count = #{blogLikeCount,jdbcType=INTEGER},
+      blog_comment_count = #{blogCommentCount,jdbcType=INTEGER},
+      blog_status = #{blogStatus,jdbcType=INTEGER},
+      blog_order = #{blogOrder,jdbcType=INTEGER}
+    where blog_id = #{blogId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wj.blog.common.domain.Blog">
+    update blog
+    set blog_title = #{blogTitle,jdbcType=VARCHAR},
+      blog_visit = #{blogVisit,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=VARCHAR},
+      blog_date = #{blogDate,jdbcType=TIMESTAMP},
+      blog_cate = #{blogCate,jdbcType=VARCHAR},
+      blog_update = #{blogUpdate,jdbcType=TIMESTAMP},
+      blog_info = #{blogInfo,jdbcType=VARCHAR},
+       blog_like_count = #{blogLikeCount,jdbcType=INTEGER},
+        blog_comment_count = #{blogCommentCount,jdbcType=INTEGER},
+      blog_status = #{blogStatus,jdbcType=INTEGER},
+      blog_order = #{blogOrder,jdbcType=INTEGER}
+    where blog_id = #{blogId,jdbcType=VARCHAR}
+  </update>
+</mapper>

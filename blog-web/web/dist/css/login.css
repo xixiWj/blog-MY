@@ -1,0 +1,325 @@
+body {
+    font-family: "Microsoft YaHei",Helvetica,Arial,Lucida Grande,Tahoma,sans-serif;
+    background: url(../img/login/bg_4.jpg) no-repeat;
+    width:auto;
+    height:auto;
+    max-width:100%;
+    max-height:100%;
+    font-size: 13px;
+    line-height: 1.4em;
+    min-width: 0;
+    color: #444;
+}
+
+a:link{
+
+}
+
+a:visited{
+
+}
+a:hover{
+    color: #66c6e4 !important;
+    transition: .5s;
+}
+
+a:active{
+
+}
+
+.login * {
+    margin: 0;
+    padding: 0;
+}
+
+.login h1 a {
+    /*background: url(../img/info/logo2.jpg) no-repeat;*/
+    background-size: 220px 50px;
+    width: 220px;
+    height: 50px;
+    padding: 0;
+    margin: 0 auto 1em;
+    font-size: 20px;
+    line-height: 1.3em;
+    padding: 0;
+    text-indent: -9999px;
+    outline: 0;
+    display: block;
+}
+/*.login h1 a {*/
+    /*background-image: url(../img/info/logo2.jpg);*/
+    /*background-image: none,url(../img/info/logo2.jpg);*/
+    /*background-size: 84px;*/
+    /*background-position: center top;*/
+    /*background-repeat: no-repeat;*/
+    /*color: #444;*/
+    /*height: 84px;*/
+    /*font-size: 20px;*/
+    /*line-height: 1.3em;*/
+    /*margin: 0 auto 25px;*/
+    /*padding: 0;*/
+    /*width: 84px;*/
+    /*text-indent: -9999px;*/
+    /*outline: 0;*/
+    /*display: block;*/
+/*}*/
+
+@media screen and (max-height: 550px){
+    #login {
+        padding: 20px 0;
+    }
+
+}
+#login {
+    width: 320px;
+    padding: 8% 0 0;
+    margin: auto;
+}
+.login #pass-strength-result, .login h1, .privacy_requests .column-type {
+    text-align: center;
+}
+
+
+h1 {
+    display: block;
+    font-size: 2em;
+    margin-block-start: 0.67em;
+    margin-block-end: 0.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+}
+
+.login form, .login .message {
+    background: #fff;
+    background: rgba(255,255,255,0.6);
+    border-radius: 2px;
+    border: 1px solid #fff;
+}
+
+.login form {
+    margin-top: 20px;
+    margin-left: 0;
+    padding: 26px 24px 46px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,.13);
+}
+.login form, .login h1 a {
+    overflow: hidden;
+    font-weight: 400;
+}
+
+#login form p {
+    margin-bottom: 0;
+}
+
+p {
+    line-height: 1.5;
+}
+
+.login form, .login h1 a {
+    overflow: hidden;
+    font-weight: 400;
+}
+
+.login label {
+    color: #000;
+    font-weight: bold;
+}
+.login label {
+    color: #72777c;
+    font-size: 14px;
+}
+
+
+.login form .input, .login form input[type=checkbox], .login input[type=text] {
+    background: #fbfbfb;
+}
+
+.login form .input, .login input[type=text] {
+    font-size: 24px;
+    width: 100%;
+    padding: 3px;
+    margin: 2px 6px 16px 0;
+}
+
+
+input[type=text], input[type=search], input[type=radio], input[type=tel], input[type=time], input[type=url], input[type=week], input[type=password], input[type=checkbox], input[type=color], input[type=date], input[type=datetime], input[type=datetime-local], input[type=email], input[type=month], input[type=number], select, textarea {
+    border: 1px solid #ddd;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.07);
+    background-color: #fff;
+    color: #32373c;
+    outline: 0;
+    transition: 50ms border-color ease-in-out;
+}
+
+input[type=text], input[type=search], input[type=radio], input[type=tel], input[type=time], input[type=url], input[type=week], input[type=password], input[type=checkbox], input[type=color], input[type=date], input[type=datetime], input[type=datetime-local], input[type=email], input[type=month], input[type=number], select, textarea {
+    border: 1px solid #ddd;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.07);
+    background-color: #fff;
+    color: #32373c;
+    outline: 0;
+    transition: 50ms border-color ease-in-out;
+}
+
+.login form .forgetmenot label {
+    font-size: 12px;
+    line-height: 19px;
+}
+
+input[type=radio], input[type=checkbox] {
+    border: 1px solid #b4b9be;
+    background: #fff;
+    color: #555;
+    clear: none;
+    cursor: pointer;
+    display: inline-block;
+    line-height: 0;
+    height: 16px;
+    margin: -4px 4px 0 0;
+    outline: 0;
+    padding: 0!important;
+    text-align: center;
+    vertical-align: middle;
+    width: 16px;
+    min-width: 16px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+    transition: .05s border-color ease-in-out;
+}
+
+.wp-core-ui .button-primary.focus, .wp-core-ui .button-primary.hover, .wp-core-ui .button-primary:focus, .wp-core-ui .button-primary:hover {
+    background: #008ec2;
+    border-color: #006799;
+    color: #fff;
+}
+.login form .forgetmenot {
+    font-weight: 400;
+    float: left;
+    margin-bottom: 0;
+}
+
+.wp-core-ui .button, .wp-core-ui .button-primary, .wp-core-ui .button-secondary {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 26px;
+    height: 28px;
+    margin: 0;
+    padding: 0 10px 1px;
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    white-space: nowrap;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.wp-core-ui .button-primary-disabled, .wp-core-ui .button-primary.disabled, .wp-core-ui .button-primary:disabled, .wp-core-ui .button-primary[disabled] {
+    color: #66c6e4!important;
+    background: #008ec2!important;
+    border-color: #007cb2!important;
+    box-shadow: none!important;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.1)!important;
+    cursor: default;
+}
+
+.wp-core-ui .button-primary {
+    background: #0085ba;
+    border-color: #0073aa #006799 #006799;
+    -webkit-box-shadow: 0 1px 0 #006799;
+    box-shadow: 0 1px 0 #006799;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 0 -1px 1px #006799, 1px 0 1px #006799, 0 1px 1px #006799, -1px 0 1px #006799;
+}
+
+.wp-core-ui .button-group.button-large .button, .wp-core-ui .button.button-large {
+    height: 30px;
+    line-height: 28px;
+    padding: 0 12px 2px;
+}
+
+.wp-core-ui p .button {
+    vertical-align: baseline;
+}
+
+.login .button-primary {
+    float: right;
+}
+
+
+input[type=text]:focus, input[type=search]:focus, input[type=radio]:focus, input[type=tel]:focus, input[type=time]:focus, input[type=url]:focus, input[type=week]:focus, input[type=password]:focus, input[type=checkbox]:focus, input[type=color]:focus, input[type=date]:focus, input[type=datetime]:focus, input[type=datetime-local]:focus, input[type=email]:focus, input[type=month]:focus, input[type=number]:focus, select:focus, textarea:focus {
+    border-color: #5b9dd9;
+    -webkit-box-shadow: 0 0 2px rgba(30,140,190,.8);
+    box-shadow: 0 0 2px rgba(30,140,190,.8);
+}
+
+.QapTcha {
+    padding: 10px 10px 10px 0;
+    margin-top: 10px;
+}
+
+.QapTcha .bgSlider {
+    width: 202px;
+    height: 22px;
+    background: transparent url(../img/login/sprites.png) no-repeat 0 -22px;
+    float: left;
+}
+
+.QapTcha .Slider {
+    width: 26px;
+    height: 22px;
+    background: transparent url(../img/login/sprites.png) no-repeat 0 0;
+    margin: 0 0 0 5px;
+    cursor: e-resize;
+}
+
+.QapTcha .clr {
+    clear: both;
+}
+
+
+.QapTcha .dropError {
+    color: #FF0000;
+}
+.QapTcha .dropSuccess {
+    color: #67A611;
+}
+.QapTcha .TxtStatus {
+    float: left;
+    width: 202px;
+    margin: 2px 0 0 10px;
+    font-size: 11px;
+}
+
+
+
+
+.login #nav {
+    margin: 24px 0 0;
+}
+.login #backtoblog, .login #nav {
+    font-size: 13px;
+    padding: 0 24px;
+}
+
+#backtoblog a, #nav a {
+    color: #fff;
+    font-weight: bold;
+}
+
+
+
+
+.login #backtoblog, .login #nav {
+    font-size: 13px;
+    padding: 0 24px;
+}
+#backtoblog {
+    margin: 16px 0;
+}
+
+
